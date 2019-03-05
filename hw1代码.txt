@@ -1,0 +1,47 @@
+function new_img=change_scale(filename,scale)%改变灰度图像的等级函数
+img=imread(filename);
+[m,n]=size(img);
+new_img=zeros(m,n);
+for i=1:m
+for j=1:n
+new_img(i,j)=floor(img(i,j)/2^(8-scale));
+end
+end
+figure
+imshow(new_img,[0,(2^scale)-1]);
+end
+
+
+function [mean_c,var_c]=calculate_mean_var(filename)%计算灰度图方差均值函数
+img=imread(filename);
+mean_c=mean(img(:));
+var_c=var(single(img(:)));
+end
+
+function [img_nearest,img_bilinear,img_bicubic]=resize_img(filename,times)%三种方法插值函数
+    img=imread(filename);
+    img_nearest=imresize(img,times,'nearest');
+    img_bilinear=imresize(img,times,'bilinear');
+    img_bicubic=imresize(img,times,'bicubic');
+    figure;
+    subplot(2,2,1),
+    imshow(img);
+    title('original img')
+    subplot(2,2,2);
+    imshow(img_nearest);
+    title('nearest img');
+    subplot(2,2,3);
+    imshow(img_bilinear);
+    title('bilinear img');
+    subplot(2,2,4);
+    imshow(img_bicubic);
+    title('bicubic img');
+end
+
+function m_imrotate(filename,h,w,angle,shape)%拉伸、旋转、插值
+img=imread(filename);
+img_shear=imresize(img,[h,w]);
+img_rota=imrotate(img_shear,angle,'bilinear');
+imwrite(img_rota,'C:\Users\DELL\Desktop\hw\elain2.bmp')
+resize_img('C:\Users\DELL\Desktop\hw\elain2.bmp',shape);
+end
